@@ -1,91 +1,103 @@
 ﻿
-using System.Text;
-
-interface IRefuelable
+interface ITryOn
 {
-    void Refill();
+    void TryOn();
 }
 
-abstract class Vehicle
+abstract class Clothing
 {
-    public string Brand { get; set; }
-    public int Speed { get; set; }
+    public string Name { get; set; }
+    public string Size { get; set; }
 
-    public Vehicle(string brand, int speed)
+    public Clothing(string name, string size)
     {
-        Brand = brand;
-        Speed = speed;
+        Name = name;
+        Size = size;
     }
 
-    public abstract void Move();
+    public abstract void CheckSize(string desiredSize);
 }
 
-class Car : Vehicle, IRefuelable
+class Shirt : Clothing, ITryOn
 {
-    public Car(string brand, int speed) : base(brand, speed) { }
+    public Shirt(string name, string size) : base(name, size) { }
 
-    public override void Move()
+    public override void CheckSize(string desiredSize)
     {
-        Console.WriteLine($"Автомобіль {Brand} їде дорогою зі швидкістю {Speed} км/год.");
+        if (Size == desiredSize)
+            Console.WriteLine($"Сорочка {Name}: розмір підходить!");
+        else
+            Console.WriteLine($"Сорочка {Name}: розмір не підходить (має {Size})");
     }
 
-    public void Refill()
+    public void TryOn()
     {
-        Console.WriteLine($"Автомобіль {Brand} заправляється паливом.");
-    }
-}
-
-class Bicycle : Vehicle
-{
-    public Bicycle(string brand, int speed) : base(brand, speed) { }
-
-    public override void Move()
-    {
-        Console.WriteLine($"Велосипед {Brand} рухається зі швидкістю {Speed} км/год.");
+        Console.WriteLine($"Приміряємо сорочку {Name}");
     }
 }
 
-class Airplane : Vehicle, IRefuelable
+class Trousers : Clothing, ITryOn
 {
-    public Airplane(string brand, int speed) : base(brand, speed) { }
+    public Trousers(string name, string size) : base(name, size) { }
 
-    public override void Move()
+    public override void CheckSize(string desiredSize)
     {
-        Console.WriteLine($"Літак {Brand} летить зі швидкістю {Speed} км/год.");
+        if (Size == desiredSize)
+            Console.WriteLine($"Штани {Name}: розмір підходить!");
+        else
+            Console.WriteLine($"Штани {Name}: розмір не підходить (має {Size})");
     }
 
-    public void Refill()
+    public void TryOn()
     {
-        Console.WriteLine($"Літак {Brand} заправляється авіаційним паливом.");
+        Console.WriteLine($"Приміряємо штани {Name}");
+    }
+}
+
+class Jacket : Clothing, ITryOn
+{
+    public Jacket(string name, string size) : base(name, size) { }
+
+    public override void CheckSize(string desiredSize)
+    {
+        if (Size == desiredSize)
+            Console.WriteLine($"Куртка {Name}: розмір підходить!");
+        else
+            Console.WriteLine($"Куртка {Name}: розмір не підходить (має {Size})");
+    }
+
+    public void TryOn()
+    {
+        Console.WriteLine($"Приміряємо куртку {Name}");
     }
 }
 
 class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        Console.OutputEncoding = Encoding.UTF8;
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-        List<Vehicle> vehicles = new List<Vehicle>
+        Clothing[] clothes = new Clothing[]
         {
-            new Car("Toyota", 120),
-            new Bicycle("Giant", 25),
-            new Airplane("Boeing", 800)
+            new Shirt("Nike", "M"),
+            new Trousers("Adidas", "L"),
+            new Jacket("Puma", "XL")
         };
 
-        foreach (var vehicle in vehicles)
+        string desiredSize = "M";
+
+        foreach (var item in clothes)
         {
-            vehicle.Move();
+            item.CheckSize(desiredSize);
         }
 
         Console.WriteLine();
 
-        foreach (var vehicle in vehicles)
+        foreach (var item in clothes)
         {
-            if (vehicle is IRefuelable refuelable)
-            {
-                refuelable.Refill();
-            }
+            if (item is ITryOn tryOn)
+                tryOn.TryOn();
         }
     }
 }
